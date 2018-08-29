@@ -1,18 +1,12 @@
 /* basic variables */
 
 let yourChoise;
-let board = ["a-1","a-2", 'a-3', 'b-1', 'b-2', 'b-3', 'c-1', 'c-2', 'c-3'];
+const board = ["a1","a2", 'a3', 'b1', 'b2', 'b3', 'c1', 'c2', 'c3'];
 
-const a1 = document.getElementById("a-1");
-const a2 = document.getElementById("a-2");
-const a3 = document.getElementById("a-3");
-const b1 = document.getElementById("b-1");
-const b2 = document.getElementById("b-2");
-const b3 = document.getElementById("b-3");
-const c1 = document.getElementById("c-1");
-const c2 = document.getElementById("c-2");
-const c3 = document.getElementById("c-3");
-
+/* Create new array with targeted DOM elements based on board array elements ids */
+const boardTds = board.map(function(y) {
+   return y = document.getElementById(y);
+})
 
 /*  main game functionality */
 
@@ -41,7 +35,7 @@ document.body.addEventListener("click", function(e) {
      let targ = e.target;  //get what was clicked on
      let id = targ.id;  //grab the id
      let index = board.indexOf(id); // idexOf is searching through board array and value and passed to let id which is just a clicked board cells id
-
+     
      console.log(targ);
      console.log(id);
 
@@ -63,7 +57,9 @@ document.body.addEventListener("click", function(e) {
                    { 
                       document.getElementById("reset").style.opacity = 1;
                       alert('You win!'); 
-                      
+                      boardTds.forEach(function(x) {
+                        x.classList.add("taken");
+                      }) 
                    }
 
               else { }
