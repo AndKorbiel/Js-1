@@ -5,14 +5,14 @@ $(document).ready(function() {
   
   // shuffle elements in arrray without repetation
   function shuffle(cards) {
-  var m = cards.length, t, i;
-  while (m > 0)   {
-  i = Math.floor(Math.random() * m--);
-  t = cards[m];
-  cards[m] = cards[i];
-  cards[i] = t;
-  }
-  return cards;
+    var m = cards.length, t, i;
+    while (m > 0)   {
+      i = Math.floor(Math.random() * m--);
+      t = cards[m];
+      cards[m] = cards[i];
+      cards[i] = t;
+    }
+    return cards;
   }
 
   shuffle(cards); 
@@ -38,11 +38,8 @@ $(document).ready(function() {
   
   $('.square').click(function() {
   
-    // hide cards that wasn't matched
-    $('.square').removeClass('show');
-
     // show clicked cards
-    $(this).toggleClass('show check flipInY');
+    $(this).toggleClass('show flipInY');
 
     // push clicked cards into array to compare them
     compare.push(($(this).attr('value')));
@@ -71,25 +68,31 @@ $(document).ready(function() {
         score_1++;
         $('#score-1').html(`Pairs find out: ${score_1}`);
 
-        if (score_1 == 10) { 
+        if (score_1 == 9) { 
           alert('End of the game'); 
           document.getElementById("reset").style.display = "block";
         };
 
-      } else {
+      } 
+
+      else {
+         // hide cards that wasn't matched
+        setTimeout(function () {
+                    $('.square').removeClass('show');
+        }, 1200); 
+
         // clear both arrays
         compare = [];
         saved = [];
         // add 1 to missed clicks
         score_2++;
         $('#score-2').html(`Missed clicks: ${score_2}`);
-        
+   
       }
 
-
-    } else {
-      
-    }
+    } 
+    
+    else { }
 
   })
 
