@@ -11,7 +11,7 @@ const boardTds = board.map(function(y) {
 /*  main game functionality */
 
 //  pre game choose for X
-document.getElementById("cross").onclick = function() {
+document.getElementById("cross").addEventListener('click', function() {
 
 // hiding intro headline and displaying table
 document.getElementById("circle").style.display = "none";
@@ -117,10 +117,10 @@ document.body.addEventListener("click", function(e) {
        } 
 }); 
 
-} 
+});
 
 //  pre game choose for O
-document.getElementById("circle").onclick = function() {
+document.getElementById("circle").addEventListener('click', function() {
 
 // hiding intro headline and displaying table
 document.getElementById("cross").style.display = "none";
@@ -226,4 +226,4 @@ document.body.addEventListener("click", function(e) {
        } 
 }); 
 
-}
+};
