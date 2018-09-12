@@ -12,7 +12,7 @@ const compScore = document.getElementById("comp-points");
 
 
 // paper control script
-document.getElementById("paper").onclick = function() {
+document.getElementById("paper").addEventListener('click', function() {
 yourChoose = 'paper';
 document.getElementById("rees").style.display = "block";
 res.innerHTML = `Your choose: ${yourChoose}`;
@@ -37,9 +37,9 @@ compRes.innerHTML = `Computer choose: ${instantChoose}`;
   score.innerHTML = `Your score: ${yourPoints}`;
   compScore.innerHTML = `Comp score: ${compPoints}`;
   }
-};
+});
 
-document.getElementById("rock").onclick = function() {
+document.getElementById("rock").addEventListener('click', function() {
 yourChoose = 'rock';
 document.getElementById("rees").style.display = "block";
 res.innerHTML = `Your choose: ${yourChoose}`;
@@ -64,9 +64,9 @@ compRes.innerHTML = `Computer choose: ${instantChoose}`;
      score.innerHTML = `Your score: ${yourPoints}`;
      compScore.innerHTML = `Comp score: ${compPoints}`;
   }
-};
+});
 
-document.getElementById("scissors").onclick = function() {
+document.getElementById("scissors").addEventListener('click', function() {
 yourChoose = 'scissors';
 document.getElementById("rees").style.display = "block";
 res.innerHTML = `Your choose: ${yourChoose}`;
@@ -91,4 +91,4 @@ compRes.innerHTML = `Computer choose: ${instantChoose}`;
      score.innerHTML = `Your score: ${yourPoints}`;
      compScore.innerHTML = `Comp score: ${compPoints}`;
   }
-};
+});
