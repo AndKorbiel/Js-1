@@ -33,66 +33,47 @@ function displayCards() {
     $('#table').html(elements);
 }
 
-icons.forEach(generateCards);
-shuffle(cards);
-displayCards();
+function compareCards() {
+    if (compare.length <= 1) {
+        $(this).toggleClass('show flipInY');
 
+        compare.push(($(this).attr('value')));
+        saved.push('#'+($(this).attr('id')));
+    } else if (compare.length === 2) {
 
-$(document).ready(function() {
+        let cardA = saved[0];
+        let cardB = saved[1];
 
-  $('.square').click(function() {
+        if ((compare[0] === compare[1]) && (cardA != cardB)) {
 
-    $(this).toggleClass('show flipInY');
+            $(cardA).addClass('saved');
+            $(cardB).addClass('saved');
+            compare = [];
+            saved = [];
+            score_1++;
+            $('#score-1').html(`Pairs find out: ${score_1}`);
 
-    compare.push(($(this).attr('value')));
-    saved.push(($(this).attr('id')));
-
-    // on first click
-    if (compare.length < 2) { }
-
-    // on second click
-    else if (compare.length == 2) {
-
-      // get cards ID
-      let a = document.getElementById(saved[0]);
-      let b = document.getElementById(saved[1]);
-
-      // check if IDs matched and if isn't same card clicked 2 times
-      if ((compare[0] === compare[1]) && (a != b)) {
-
-        // add saved class to elements to prevent them from hiding
-        $(a).addClass('saved');
-        $(b).addClass('saved');
-        // clear both arrays
-        compare = [];
-        saved = [];
-        // add 1 to score
-        score_1++;
-        $('#score-1').html(`Pairs find out: ${score_1}`);
-
-        if (score_1 == 9) {
-          alert('End of the game');
-          document.getElementById("reset").style.display = "block";
-        };
-
-      }
-
-      else {
-         // hide cards that wasn't matched
-        setTimeout(function () {
-                    $('.square').removeClass('show');
-        }, 1200);
-
-        // clear both arrays
-        compare = [];
-        saved = [];
-        // add 1 to missed clicks
-        score_2++;
-        $('#score-2').html(`Missed clicks: ${score_2}`);
-
-      }
-
+            if (score_1 == 9) {
+                alert('End of the game');
+                document.getElementById("reset").style.display = "block";
+            }
+        } else {
+            $('.square').removeClass('show');
+            compare = [];
+            saved = [];
+            score_2++;
+            $('#score-2').html(`Missed clicks: ${score_2}`);
+        }
     }
-  })
+}
 
+function init() {
+    icons.forEach(generateCards);
+    shuffle(cards);
+    displayCards();
+}
+
+$(document).ready(function () {
+    init();
+    $('.square').click(compareCards)
 });

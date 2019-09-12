@@ -31,6 +31,7 @@ background: #ddd !important;
 font-size: 52px;
 font-weight: 300;
 color: black;
+    transition: 0.2s;
 }
 
 h3 {
@@ -163,4 +164,4 @@ button:hover .fas {
   -webkit-transform: perspective(400px);
   transform: perspective(400px);
   }
-  } 
+  }
