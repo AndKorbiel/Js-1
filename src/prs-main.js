@@ -3,92 +3,66 @@ let compChoose = ['paper', 'rock', 'scissors'];
 let yourPoints = 0;
 let compPoints = 0;
 
-
 const res = document.getElementById("result");
 const compRes = document.getElementById("comp-result");
 const win = document.getElementById("win");
 const score = document.getElementById("your-points");
 const compScore = document.getElementById("comp-points");
+const controllers = document.querySelectorAll('.controller');
 
-
-// paper control script
-document.getElementById("paper").addEventListener('click', function() {
-yourChoose = 'paper';
-document.getElementById("rees").style.display = "block";
-res.innerHTML = `Your choose: ${yourChoose}`;
-let x = Math.floor(Math.random() * 3);
-instantChoose = compChoose[x];
-compRes.innerHTML = `Computer choose: ${instantChoose}`;
-
-	if (instantChoose === 'paper') {
-   win.innerHTML = `Result: TIE`;
-   score.innerHTML = `Your score: ${yourPoints}`;
-   compScore.innerHTML = `Comp score: ${compPoints}`;
-  }
-  else if (instantChoose === 'rock') { 
-   ++yourPoints;
-   win.innerHTML = `Result: YOU WIN`;
+function showResults(winMessage) {
+    win.innerHTML = `Result: ${winMessage}`;
     score.innerHTML = `Your score: ${yourPoints}`;
     compScore.innerHTML = `Comp score: ${compPoints}`;
-  }
-  else {
-  ++compPoints;
-  win.innerHTML = `Result: COMP WINS`;
-  score.innerHTML = `Your score: ${yourPoints}`;
-  compScore.innerHTML = `Comp score: ${compPoints}`;
-  }
-});
+}
 
-document.getElementById("rock").addEventListener('click', function() {
-yourChoose = 'rock';
-document.getElementById("rees").style.display = "block";
-res.innerHTML = `Your choose: ${yourChoose}`;
-let x = Math.floor(Math.random() * 3);
-instantChoose = compChoose[x];
-compRes.innerHTML = `Computer choose: ${instantChoose}`;
+function compChoise(yourChoose) {
+    let randomPick = Math.floor(Math.random() * 3);
+    let instantChoose = compChoose[randomPick];
+    compRes.innerHTML = `Computer choose: ${instantChoose}`;
 
-	if (instantChoose === 'paper') {
-    ++compPoints;
-    win.innerHTML = `Result: COMP WINS`;
-    score.innerHTML = `Your score: ${yourPoints}`;
-    compScore.innerHTML = `Comp score: ${compPoints}`;
-  }
-  else if (instantChoose === 'rock') { 
-     win.innerHTML = `Result: TIE`;
-     score.innerHTML = `Your score: ${yourPoints}`;
-     compScore.innerHTML = `Comp score: ${compPoints}`;
-  }
-  else {
-     ++yourPoints;
-     win.innerHTML = `Result: YOU WIN`;
-     score.innerHTML = `Your score: ${yourPoints}`;
-     compScore.innerHTML = `Comp score: ${compPoints}`;
-  }
-});
+    if (instantChoose === 'paper') {
+        if (yourChoose === 'paper') {
+            showResults('TIE');
+        } else if (yourChoose === 'rock') {
+            ++compPoints;
+            showResults('COMP WINS');
+        } else {
+            ++yourPoints;
+            showResults('YOU WIN');
+        }
+    }
+    else if (instantChoose === 'rock') {
+        if (yourChoose === 'paper') {
+            ++yourPoints;
+            showResults('YOU WIN');
+        } else if (yourChoose === 'rock') {
+            showResults('TIE');
+        } else {
+            ++compPoints;
+            showResults('COMP WINS');
+        }
+    }
+    else {
+        if (yourChoose === 'paper') {
+            ++compPoints;
+            showResults('COMP WINS');
+        } else if (yourChoose === 'rock') {
+            ++yourPoints;
+            showResults('YOU WIN');
+        } else {
+            ++compPoints;
+            showResults('TIE');
+        }
+    }
+}
 
-document.getElementById("scissors").addEventListener('click', function() {
-yourChoose = 'scissors';
-document.getElementById("rees").style.display = "block";
-res.innerHTML = `Your choose: ${yourChoose}`;
-let x = Math.floor(Math.random() * 3);
-instantChoose = compChoose[x];
-compRes.innerHTML = `Computer choose: ${instantChoose}`;
+controllers.forEach(function(element) {
+    element.addEventListener('click', function(e) {
 
-	if (instantChoose === 'paper') {
-    ++yourPoints;
-    win.innerHTML = `Result: YOU WIN`;
-    score.innerHTML = `Your score: ${yourPoints}`;
-    compScore.innerHTML = `Comp score: ${compPoints}`;
-  }
-  else if (instantChoose === 'rock') { 
-    ++compPoints;
-    win.innerHTML = `Result: COMP WINS`;
-    score.innerHTML = `Your score: ${yourPoints}`;
-    compScore.innerHTML = `Comp score: ${compPoints}`;
-  }
-  else {
-     win.innerHTML = `Result: TIE`;
-     score.innerHTML = `Your score: ${yourPoints}`;
-     compScore.innerHTML = `Comp score: ${compPoints}`;
-  }
+        yourChoose = e.target.id;
+        document.getElementById("rees").style.display = "block";
+        res.innerHTML = `Your choose: ${yourChoose}`;
+        compChoise(yourChoose);
+    });
 });
