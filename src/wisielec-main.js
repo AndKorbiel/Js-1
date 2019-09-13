@@ -1,118 +1,92 @@
-$(document).ready(function() {
+const passwords = ['Gdzie dwóch się bije tam trzeci korzysta'],
+    firstToShow = ['a', 'e', 'i', 'o'],
+    random = Math.floor(Math.random() * 4),
+    randomLetter = firstToShow[random],
+    singleLetter = '.single-l span';
+let chars = '',
+    letter = '',
+    life = 10,
+    checkPoints = false;
 
-    let passwords = ['Gdzie dwóch się bije tam trzeci korzysta'];
-    let firstToShow = ['a', 'e', 'i', 'o'];
-    let random = Math.floor(Math.random() * 4);
-    let randomLetter = firstToShow[random];
-    let chars = '';
-    let life = 10;
-    let checkPoints = false;
-
-    function start() {
-    
-        // slice sentence to letters and apend it to div
-        for (i = 0; i < passwords[0].length; i++) {
+function start() {
+    for (let i = 0; i < passwords[0].length; i++) {
         chars += `<div class="single-l"><span>${passwords[0].charAt(i)}</span></div></div>`;
-        }
-
-        $('#pass').html(chars);
-        
-        // hide letters
-        $('.single-l span').hide();
-
-        // show random lettter from firstToShow on start
-        $( ".single-l span" ).each(function( index, element ) {
-          // element == this
-
-          if($(this).is(':contains("' + randomLetter + '")'))  {
-            $( this ).show();
-
-          }
-
-          else if($(this).is(':contains(" ")'))  {
-            $( this ).parent().addClass('grey');
-
-          }
-
-        });
-        $('#letters-passed').append(`<li>${randomLetter}</li>`);
     }
-    
- 
-    /* Pass letter func */ 
-   
-    $('#pass-letter').click(function() {
-   
-        
-        let letter = '';
-        
-        // compares passed letter with each letter in passwords
-        function passLetter() {
-        
-            letter = prompt('Podaj literę').toLowerCase();
-            checkPoints = false; // reset checkPoint checker;
 
-            $( "#letters-passed li" ).each(function( index, element ) {
+    $('#pass').html(chars);
+    $(singleLetter).hide();
 
-                if ($(this).text().toLowerCase() == letter)  {
-                    alert('Była');
-                    passLetter(); // start function again
-                }
-             });   
+    $(singleLetter).each(function() {
+        if($(this).is(':contains("' + randomLetter + '")'))  {
+            $( this ).show();
+        } else if ($(this).is(':contains(" ")'))  {
+            $( this ).parent().addClass('grey');
+        }
+    });
 
-             $( ".single-l span" ).each(function( index, element ) {
+    $('#letters-passed').append(`<li>${randomLetter}</li>`);
+}
 
-                 if ($(this).text().toLowerCase() == letter)  {
-                     $( this ).show();
-                     checkPoints = true;
-                  }
+function passLetter() {
+    letter = prompt('Podaj literę').toLowerCase();
+    letter = letter.slice(0,1);
+    checkPoints = false;
 
-             });
-         
-         }
-        
-        passLetter();
-         
-         // add passed letter to list  
-         $('#letters-passed').append(`<li>${letter}</li>`)
-        
-         // check points 
-         if (checkPoints === false) {
-             alert('Pudło');        
-             life--;
-             $('#points').html(life);
+    $( "#letters-passed li").each(function() {
 
-             if (life == 0) {
-                alert('Koniec gry');
-                document.getElementById("reset").style.display = "block";
-                document.getElementById("buttons").style.display = "none";
-              }
-          
-         }
+        if ($(this).text().toLowerCase() === letter)  {
+            alert('Była');
+            passLetter();
+        }
+    });
 
-         else {
-         
-         }
-     });
-     
-      // pass the answer
-      $('#pass-password').click(function() {
-        let pass = prompt('Podaj hasło'); 
+    $(singleLetter).each(function() {
+        if ($(this).text().toLowerCase() === letter)  {
+            $( this ).show();
+            checkPoints = true;
+        }
+    });
 
-        if (pass == passwords) {
-            alert('Hasło odgadnięte');
-            $('.single-l span').show();
+    $('#letters-passed').append(`<li>${letter}</li>`);
+
+    if (checkPoints === false) {
+        alert('Pudło');
+        life--;
+        $('#points').html(life);
+
+        if (life === 0) {
+            alert('Koniec gry');
             document.getElementById("reset").style.display = "block";
             document.getElementById("buttons").style.display = "none";
-        } 
-        else {
+        }
+    }
+}
+
+function passPassword() {
+    let pass = prompt('Podaj hasło');
+
+    if (pass === passwords) {
+        alert('Hasło odgadnięte');
+        $('.single-l span').show();
+        document.getElementById("reset").style.display = "block";
+        document.getElementById("buttons").style.display = "none";
+    }
+    else {
         alert('Złe hasło');
         life--;
-         $('#points').html(life);
-        }
-      
-      });
-      
+        $('#points').html(life);
+    }
+}
+
+
+$(document).ready(function() {
     start();
-    
+
+    $('#pass-letter').click(function () {
+        passLetter();
+    });
+
+    $('#pass-password').click(function () {
+        passPassword();
+    });
 });
