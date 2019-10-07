@@ -1,229 +1,115 @@
-/* basic variables */
-
-let yourChoise;
+let yourChoise,
+    compChoise,
+    yourSign = 'O',
+    compSign = 'X';
 const board = ["a1","a2", 'a3', 'b1', 'b2', 'b3', 'c1', 'c2', 'c3'];
 
-/* Create new array with targeted DOM elements based on board array elements ids */
 const boardTds = board.map(function(y) {
-   return y = document.getElementById(y);
-})
+    return document.getElementById(y);
+});
 
-/*  main game functionality */
+function endGameAlert(winner) {
+    document.getElementById("reset").style.opacity = 1;
+    alert(winner +' win!');
+    boardTds.forEach(function(x) {
+        x.classList.add("taken");
+    })
+}
 
-//  pre game choose for X
+function symbolSelection(playerChoise, otherSign) {
+    document.getElementById(otherSign).style.display = "none";
+    document.getElementById("info").innerHTML = `You've choosed Your destiny.`;
+    yourChoise = playerChoise;
+    compChoise = otherSign;
+
+    if (yourChoise === 'cross') {
+        yourSign = 'X';
+        compSign = 'O'
+    }
+
+    setInterval(function () {
+        document.getElementById("choose").style.opacity = 0;
+    }, 1500);
+
+    setInterval(function () {
+        document.getElementById("table").style.opacity = 1;
+    }, 1500);
+}
+
+function winningConditionChecker(e, currentPlayer) {
+    let checkedSymbol,
+        winner,
+        nextPlayer;
+
+    if (currentPlayer === 'player') {
+        checkedSymbol = yourChoise;
+        winner = 'You';
+        nextPlayer = 'Comp'
+    } else {
+        checkedSymbol = compChoise;
+        winner = 'Comp';
+        nextPlayer = 'player'
+    }
+
+    if (
+        (a1.classList.contains(checkedSymbol) && a2.classList.contains(checkedSymbol) && a3.classList.contains(checkedSymbol))
+        || (b1.classList.contains(checkedSymbol) && b2.classList.contains(checkedSymbol) && b3.classList.contains(checkedSymbol))
+        || (c1.classList.contains(checkedSymbol) && c2.classList.contains(checkedSymbol) && c3.classList.contains(checkedSymbol))
+        || (a1.classList.contains(checkedSymbol) && b2.classList.contains(checkedSymbol) && c3.classList.contains(checkedSymbol))
+        || (a3.classList.contains(checkedSymbol) && b2.classList.contains(checkedSymbol) && c1.classList.contains(checkedSymbol))
+        || (a1.classList.contains(checkedSymbol) && b1.classList.contains(checkedSymbol) && c1.classList.contains(checkedSymbol))
+        || (a2.classList.contains(checkedSymbol) && b2.classList.contains(checkedSymbol) && c2.classList.contains(checkedSymbol))
+        || (a3.classList.contains(checkedSymbol) && b3.classList.contains(checkedSymbol) && c3.classList.contains(checkedSymbol))
+    ) {
+        endGameAlert(winner)
+    } else if (boardTds.every(element => element.classList.contains('taken')) ) {
+        document.getElementById("reset").style.opacity = 1;
+        alert('Tie!');
+    } else {
+        nextMove(e, nextPlayer);
+    }
+}
+
+function nextMove(e, user) {
+    if (user === 'player') {
+        let targ = e.target;
+
+        if (targ.classList.contains('clickable')) {
+
+            if (targ.classList.contains("taken")) {
+                targ = null;
+            } else {
+                targ.innerHTML = yourSign;
+                targ.classList.add(yourChoise, "taken");
+                winningConditionChecker(e, user);
+            }
+        }
+    } else {
+        let rand = board[Math.floor(Math.random() * board.length)];
+        let index = board.indexOf(rand);
+
+        if (!(document.getElementById(rand).classList.contains("taken"))) {
+
+            document.getElementById(rand).innerHTML = compSign;
+            document.getElementById(rand).classList.add(compChoise, "taken");
+            winningConditionChecker(e, user);
+
+            if (index !== -1) board.splice(index, 1);
+            nextMove(e, 'player');
+        } else {
+            nextMove(e, 'Comp');
+        }
+    }
+}
+
 document.getElementById("cross").addEventListener('click', function() {
-
-// hiding intro headline and displaying table
-document.getElementById("circle").style.display = "none";
-document.getElementById("info").innerHTML = `You've choosed Your destiny.`;
-yourChoise = 'cross';
-
-// animation time
-  setInterval(function(){
-    document.getElementById("choose").style.opacity = 0;
-    }, 1500);
-
-  setInterval(function(){
-    document.getElementById("table").style.opacity = 1;
-    }, 1500);
-
-
-// main func for X, adding click func and get element ID
-document.body.addEventListener("click", function(e) {
-
-     let targ = e.target;  //get what was clicked on
-     let id = targ.id;  //grab the id
-     let index = board.indexOf(id); // idexOf is searching through board array and value and passed to let id which is just a clicked board cells id
-
-     console.log(targ);
-     console.log(id);
-
-     if (targ.classList.contains('clickable')) {
-
-          if (targ.classList.contains("taken")) { // prevents overrinding
-            console.log('taken');
-            targ = null;
-          }
-
-          else {
-            console.log('clickable');
-            targ.innerHTML = 'X';   // point X at table cell
-            targ.classList.add("taken");
-
-              // winning conditionals for player
-              if ((a1.innerHTML === 'X' && a2.innerHTML === 'X' && a3.innerHTML === 'X') || (b1.innerHTML === 'X' && b2.innerHTML === 'X' && b3.innerHTML === 'X') || (c1.innerHTML === 'X' && c2.innerHTML === 'X' && c3.innerHTML === 'X') || (a1.innerHTML === 'X' && b2.innerHTML === 'X' && c3.innerHTML === 'X') || (a3.innerHTML === 'X' && b2.innerHTML === 'X' && c1.innerHTML === 'X') || (a1.innerHTML === 'X' && b1.innerHTML === 'X' && c1.innerHTML === 'X') || (a2.innerHTML === 'X' && b2.innerHTML === 'X' && c2.innerHTML === 'X') || (a3.innerHTML === 'X' && b3.innerHTML === 'X' && c3.innerHTML === 'X')
-              )
-
-                   {
-                      document.getElementById("reset").style.opacity = 1;
-                      alert('You win!');
-                      boardTds.forEach(function(x) {
-                        x.classList.add("taken");
-                      })
-                   }
-
-              // check if every piece of board is taken
-              else if (boardTds.every(element => element.classList.contains('taken')) ) {
-                  document.getElementById("reset").style.opacity = 1;
-                  alert('Tie!');
-              }
-
-              else {
-              compPick();
-              }
-
-          }
-
-     }
-
-     else { }
-
-     function compPick() {
-          // pick up random elment from array
-          let rand = board[Math.floor(Math.random() * board.length)];
-
-             // check if fiels isn't already taken
-             if (!(document.getElementById(rand).classList.contains("taken"))) {
-
-                 document.getElementById(rand).innerHTML = 'O';
-                 document.getElementById(rand).classList.add("taken");
-
-                 // reasigning index value to new ID and than remove it
-                 index = board.indexOf(rand);
-
-                 // if array is not empty
-                 if (index !== -1) board.splice(index, 1);
-
-                      // winning conditionals for CPU
-                      if ((a1.innerHTML === 'O' && a2.innerHTML === 'O' && a3.innerHTML === 'O') || (b1.innerHTML === 'O' && b2.innerHTML === 'O' && b3.innerHTML === 'O') || (c1.innerHTML === 'O' && c2.innerHTML === 'O' && c3.innerHTML === 'O') || (a1.innerHTML === 'O' && b2.innerHTML === 'O' && c3.innerHTML === 'O') || (a3.innerHTML === 'O' && b2.innerHTML === 'O' && c1.innerHTML === 'O') || (a1.innerHTML === 'O' && b1.innerHTML === 'O' && c1.innerHTML === 'O') || (a2.innerHTML === 'O' && b2.innerHTML === 'O' && c2.innerHTML === 'O') || (a3.innerHTML === 'O' && b3.innerHTML === 'O' && c3.innerHTML === 'O')
-                      )
-
-                      {
-                        document.getElementById("reset").style.opacity = 1;
-                        alert('Comp wins!');
-                        boardTds.forEach(function(x) {
-                            x.classList.add("taken");
-                        })
-                      }
-
-                 else { }
-
-                 }
-
-             // if picked random fields is taken start function again
-             else {
-                compPick();
-             }
-       }
+    symbolSelection('cross', 'circle');
 });
 
-});
-
-//  pre game choose for O
 document.getElementById("circle").addEventListener('click', function() {
-
-// hiding intro headline and displaying table
-document.getElementById("cross").style.display = "none";
-document.getElementById("info").innerHTML = `You've choosed Your destiny.`;
-yourChoise = 'circle';
-
-// animation time
-  setInterval(function(){
-    document.getElementById("choose").style.opacity = 0;
-    }, 1500);
-
-  setInterval(function(){
-    document.getElementById("table").style.opacity = 1;
-    }, 1500);
-
-
-// main func for O, adding click func and get element ID
-document.body.addEventListener("click", function(e) {
-
-     let targ = e.target;  //get what was clicked on
-     let id = targ.id;  //grab the id
-     let index = board.indexOf(id); // idexOf is searching through board array and value and passed to let id which is just a clicked board cells id
-
-     console.log(targ);
-     console.log(id);
-
-     if (targ.classList.contains('clickable')) {
-
-          if (targ.classList.contains("taken")) { // prevents overrinding
-            console.log('taken');
-            targ = null;
-          }
-
-          else {
-            console.log('clickable');
-            targ.innerHTML = 'O';   // point O at table cell
-            targ.classList.add("taken");
-
-              // winning conditionals for player
-             if ((a1.innerHTML === 'O' && a2.innerHTML === 'O' && a3.innerHTML === 'O') || (b1.innerHTML === 'O' && b2.innerHTML === 'O' && b3.innerHTML === 'O') || (c1.innerHTML === 'O' && c2.innerHTML === 'O' && c3.innerHTML === 'O') || (a1.innerHTML === 'O' && b2.innerHTML === 'O' && c3.innerHTML === 'O') || (a3.innerHTML === 'O' && b2.innerHTML === 'O' && c1.innerHTML === 'O') || (a1.innerHTML === 'O' && b1.innerHTML === 'O' && c1.innerHTML === 'O') || (a2.innerHTML === 'O' && b2.innerHTML === 'O' && c2.innerHTML === 'O') || (a3.innerHTML === 'O' && b3.innerHTML === 'O' && c3.innerHTML === 'O')
-              )
-
-                   {
-                      document.getElementById("reset").style.opacity = 1;
-                      alert('You win!');
-                      boardTds.forEach(function(x) {
-                        x.classList.add("taken");
-                      })
-                   }
-
-              // check if every piece of board is taken
-              else if (boardTds.every(element => element.classList.contains('taken')) ) {
-                  document.getElementById("reset").style.opacity = 1;
-                  alert('Tie!');
-              }
-
-              else {
-              compPick();
-              }
-
-          }
-
-     }
-
-     else { }
-
-     function compPick() {
-          // pick up random elment from array
-          let rand = board[Math.floor(Math.random() * board.length)];
-
-             // check if fiels isn't already taken
-             if (!(document.getElementById(rand).classList.contains("taken"))) {
-
-                 document.getElementById(rand).innerHTML = 'X';
-                 document.getElementById(rand).classList.add("taken");
-
-                 // reasigning index value to new ID and than remove it
-                 index = board.indexOf(rand);
-
-                 // if array is not empty
-                 if (index !== -1) board.splice(index, 1);
-
-                      // winning conditionals for CPU
-                      if ((a1.innerHTML === 'X' && a2.innerHTML === 'X' && a3.innerHTML === 'X') || (b1.innerHTML === 'X' && b2.innerHTML === 'X' && b3.innerHTML === 'X') || (c1.innerHTML === 'X' && c2.innerHTML === 'X' && c3.innerHTML === 'X') || (a1.innerHTML === 'X' && b2.innerHTML === 'X' && c3.innerHTML === 'X') || (a3.innerHTML === 'X' && b2.innerHTML === 'X' && c1.innerHTML === 'X') || (a1.innerHTML === 'X' && b1.innerHTML === 'X' && c1.innerHTML === 'X') || (a2.innerHTML === 'X' && b2.innerHTML === 'X' && c2.innerHTML === 'X') || (a3.innerHTML === 'X' && b3.innerHTML === 'X' && c3.innerHTML === 'X')
-                        )
-
-                      {
-                        document.getElementById("reset").style.opacity = 1;
-                        alert('Comp wins!');
-                        boardTds.forEach(function(x) {
-                            x.classList.add("taken");
-                        })
-                      }
-
-                 else { }
-
-                 }
-
-             // if picked random fields is taken start function again
-             else {
-                compPick();
-             }
-       }
+    symbolSelection('circle', 'cross');
 });
 
+document.body.addEventListener("click", function(e) {
+    nextMove(e, 'player')
 });
